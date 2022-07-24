@@ -10,7 +10,7 @@
 <img src="./assets/visualization_attentions.png">  
 </p> 
 
-Our code is under refactoring. In the meantime, please refer to [this code snippet](./fastmetro.py) which contains the main framework of our FastMETRO.
+Our code is under refactoring. In the meantime, please refer to [this code snippet](./src/fastmetro.py) which contains the main framework of our FastMETRO.
 
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
