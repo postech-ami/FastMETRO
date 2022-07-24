@@ -10,7 +10,7 @@
 <img src="./assets/visualization_attentions.png">  
 </p> 
 
-Our code is under refactoring. In the meantime, please refer to [this code snippet](https://github.com/postech-ami/FastMETRO) which contains the main framework of our FastMETRO.
+Our code is under refactoring. In the meantime, please refer to [this code snippet](./fastmetro.py) which contains the main framework of our FastMETRO.
 
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
@@ -24,8 +24,10 @@ If you find our work useful for your research, please consider citing our paper:
 }
 ````
 
-## Acknowledgements
-Our repository is modified and adapted from these amazing repositories. If you find their work useful for your research, please also consider citing them.
+## Acknowledgments
+This work was supported by Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government (MSIT) (No. 2022-0-00290, Visual Intelligence for Space-Time Understanding and Generation based on Multi-layered Visual Common Sense; and No. 2019-0-01906, Artificial Intelligence Graduate School Program (POSTECH)).
+
+Our repository is modified and adapted from these amazing repositories. If you find their work useful for your research, please also consider citing them:
 - [METRO](https://github.com/microsoft/MeshTransformer)          
 - [MeshGraphormer](https://github.com/microsoft/MeshGraphormer)
 - [GraphCMR](https://github.com/nkolot/GraphCMR)
