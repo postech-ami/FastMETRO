@@ -1,7 +1,7 @@
 # [ECCV'22] FastMETRO
-### [Paper](https://github.com/postech-ami/FastMETRO) | [Project Page](https://github.com/postech-ami/FastMETRO) 
+### [Paper](https://arxiv.org/abs/2207.13820) | [Project Page](https://fastmetro.github.io/) 
 
-- This is the official PyTorch implementation of [Cross-Attention of Disentangled Modalities for 3D Human Mesh Recovery with Transformers](https://github.com/postech-ami/FastMETRO).
+- This is the official PyTorch implementation of [Cross-Attention of Disentangled Modalities for 3D Human Mesh Recovery with Transformers](https://arxiv.org/abs/2207.13820).
 - **FastMETRO** (**Fast** **ME**sh **TR**ansf**O**rmer) has a novel transformer encoder-decoder architecture for 3D human pose and mesh reconstruction from a single RGB image.
 
 ---
