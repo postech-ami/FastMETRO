@@ -1,0 +1,15 @@
+yacs
+cython
+opencv-python
+tqdm
+nltk
+numpy
+scipy
+chumpy
+boto3
+requests
+submitit
+pyrender
+trimesh
+matplotlib
+scikit-image

@@ -53,26 +53,26 @@ class Transformer(nn.Module):
 
     def forward(self, img_features, cam_token, jv_tokens, pos_embed, attention_mask=None):
         device = img_features.device
-        hw, bs, _ = img_features.shape
-        mask = torch.zeros((bs, hw), dtype=torch.bool, device=device)
+        hw, bs, _ = img_features.shape # (height * width), batch_size, feature_dim
+        mask = torch.zeros((bs, hw), dtype=torch.bool, device=device) # batch_size X (height * width)
 
         # Transformer Encoder 
-        zero_mask = torch.zeros((bs, 1), dtype=torch.bool, device=device)
-        mem_mask = torch.cat([zero_mask, mask], dim=1)
-        cam_with_img = torch.cat([cam_token, img_features], dim=0)
-        e_outputs = self.encoder(cam_with_img, src_key_padding_mask=mem_mask, pos=pos_embed)
+        zero_mask = torch.zeros((bs, 1), dtype=torch.bool, device=device) # batch_size X 1
+        mem_mask = torch.cat([zero_mask, mask], dim=1) # batch_size X (1 + height * width)
+        cam_with_img = torch.cat([cam_token, img_features], dim=0) # (1 + height * width) X batch_size X feature_dim
+        e_outputs = self.encoder(cam_with_img, src_key_padding_mask=mem_mask, pos=pos_embed) # (1 + height * width) X batch_size X feature_dim
         cam_features, enc_img_features = e_outputs.split([1, hw], dim=0) 
 
         # Transformer Decoder
-        zero_tgt = torch.zeros_like(jv_tokens)
+        zero_tgt = torch.zeros_like(jv_tokens) # (num_joints + num_vertices) X batch_size X feature_dim
         jv_features = self.decoder(jv_tokens, enc_img_features, tgt_mask=attention_mask, 
-                                   memory_key_padding_mask=mask, pos=pos_embed, query_pos=zero_tgt)
+                                   memory_key_padding_mask=mask, pos=pos_embed, query_pos=zero_tgt) # (num_joints + num_vertices) X batch_size X feature_dim
 
         return cam_features, enc_img_features, jv_features
 
 
 class TransformerEncoder(nn.Module):
-
+    """Transformer encoder"""
     def __init__(self, encoder_layer, num_layers, norm=None):
         super().__init__()
         self.num_layers = num_layers
@@ -96,7 +96,7 @@ class TransformerEncoder(nn.Module):
 
 
 class TransformerDecoder(nn.Module):
-
+    """Transformer decoder"""
     def __init__(self, decoder_layer, num_layers, norm=None):
         super().__init__()
         self.num_layers = num_layers
@@ -126,7 +126,7 @@ class TransformerDecoder(nn.Module):
 
 
 class TransformerEncoderLayer(nn.Module):
-
+    """Transformer encoder layer"""
     def __init__(self, model_dim, nhead, feedforward_dim=2048, dropout=0.1, activation="relu"):
         super().__init__()
         self.self_attn = nn.MultiheadAttention(model_dim, nhead, dropout=dropout)
@@ -164,7 +164,7 @@ class TransformerEncoderLayer(nn.Module):
 
 
 class TransformerDecoderLayer(nn.Module):
-
+    """Transformer decoder layer"""
     def __init__(self, model_dim, nhead, feedforward_dim=2048, dropout=0.1, activation="relu"):
         super().__init__()
         self.self_attn = nn.MultiheadAttention(model_dim, nhead, dropout=dropout)
@@ -221,7 +221,7 @@ def _get_activation_fn(activation):
         return F.gelu
     if activation == "glu":
         return F.glu
-    raise RuntimeError(F"activation should be relu/gelu, not {activation}.")
+    raise RuntimeError("activation should be relu/gelu, not {activation}.")
 
 def build_transformer(transformer_config):
     return Transformer(model_dim=transformer_config['model_dim'],

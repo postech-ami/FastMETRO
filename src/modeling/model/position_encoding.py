@@ -55,6 +55,6 @@ def build_position_encoding(pos_type, hidden_dim):
     if pos_type == 'sine':
         position_embedding = PositionEmbeddingSine(N_steps, normalize=True)
     else:
-        raise ValueError(f"not supported {pos_type}")
+        raise ValueError("not supported {pos_type}")
 
     return position_embedding
