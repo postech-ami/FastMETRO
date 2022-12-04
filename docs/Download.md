@@ -42,10 +42,10 @@
     | Model                               | Dataset   | Link            |
     | ----------------------------------- | --------- | --------------- |
     | FastMETRO-S-R50                     | Human3.6M | Download (Soon) |
-    | FastMETRO-L-H64                     | Human3.6M | Download (Soon) |
+    | FastMETRO-L-H64                     | Human3.6M | [Download](https://drive.google.com/u/2/uc?id=1WU6q27SV7YNGCSBLypB5IGFVWMnL26io&export=download&confirm=t)        |
     | FastMETRO-S-R50                     | 3DPW      | Download (Soon) |
-    | FastMETRO-L-H64                     | 3DPW      | Download (Soon) |
-    | FastMETRO-L-H64                     | FreiHAND  | Download (Soon) |
+    | FastMETRO-L-H64                     | 3DPW      | [Download](https://drive.google.com/u/2/uc?id=19Nc-KyluAB4UmY70HoBvIRqwRFVy4jQB&export=download&confirm=t)        |
+    | FastMETRO-L-H64                     | FreiHAND  | [Download](https://drive.google.com/u/2/uc?id=1u6dr0E1w15IBmstcFaihr6r-DHKFWuw1&export=download&confirm=t)        |
 
 
     ### Parametric (w/ optional SMPL parameter regressor)
