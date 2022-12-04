@@ -43,7 +43,7 @@ Our repository is modified and adapted from these amazing repositories. If you f
 
 
 ## Contact
-jhcho99.cs@gmail.com
+fastmetro.official@gmail.com
 
 
 ## Citation
