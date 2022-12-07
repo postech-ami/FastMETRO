@@ -354,6 +354,8 @@ def run_eval_and_save(args, split, val_dataloader, FastMETRO_model, mano_model, 
                             mano_model, renderer, split)
     checkpoint_dir = save_checkpoint(FastMETRO_model, args, 0, 0)
     
+    logger.info("The experiment completed successfully. Finalizing run...")
+    
     return
 
 
@@ -418,10 +420,8 @@ def run_inference_hand_mesh(args, val_loader, FastMETRO_model, mano_model, rende
     with open('pred.json', 'w') as f:
         json.dump([joint_output_save, mesh_output_save], f)
 
-    run_exp_name = args.resume_checkpoint.split('/')[-3]
-    run_ckpt_name = args.resume_checkpoint.split('/')[-2].split('-')[1]
     inference_setting = 'sc%02d_rot%s'%(int(args.sc*10),str(int(args.rot)))
-    resolved_submit_cmd = 'zip ' + args.output_dir + run_exp_name + '-ckpt'+ run_ckpt_name + '-' + inference_setting +'-pred.zip  ' +  'pred.json'
+    resolved_submit_cmd = 'zip ' + args.output_dir + 'FastMETRO-' + inference_setting +'-pred.zip  ' +  'pred.json'
     print(resolved_submit_cmd)
     os.system(resolved_submit_cmd)
     resolved_submit_cmd = 'rm pred.json'

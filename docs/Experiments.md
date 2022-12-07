@@ -61,6 +61,13 @@ python -m torch.distributed.launch --nproc_per_node=4 \
 - To visualize the 3D mesh output in multi views, you need to set `--visualize_multi_view` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
 
+#### Quantitative Evaluation Results
+
+- obtained by using the released model checkpoint (`FastMETRO-L-H64_h36m_state_dict.bin`)
+
+```
+MPJPE:  52.96, PA-MPJPE:  33.58 
+```
 
 <a name="3dpw"></a>
 ### Training on 3DPW
@@ -97,7 +104,7 @@ In the following script, we evaluate our model `FastMETRO-L-H64_3dpw_state_dict.
 ```bash
 python -m torch.distributed.launch --nproc_per_node=4 \
        src/tools/run_fastmetro_bodymesh.py \
-       --val_yaml 3dpw/test.yaml \
+       --val_yaml 3dpw/test_has_gender.yaml \
        --arch hrnet-w64 \
        --model_name FastMETRO-L \
        --num_workers 4 \
@@ -110,6 +117,14 @@ python -m torch.distributed.launch --nproc_per_node=4 \
 - To visualize the 3D mesh output during evaluation, you need to set `--run_eval_and_visualize` as `True`
 - To visualize the 3D mesh output in multi views, you need to set `--visualize_multi_view` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
+
+#### Quantitative Evaluation Results
+
+- obtained by using the released model checkpoint (`FastMETRO-L-H64_3dpw_state_dict.bin`)
+
+```
+MPVPE:  82.95, MPJPE:  73.54, PA-MPJPE:  44.58 
+```
 
 ## 3D Hand Mesh Reconstruction from a Single RGB Image
 
@@ -162,3 +177,26 @@ There are two ways to evaluate the prediction results:
 (1) Submit the results to [FreiHAND Leaderboard](https://competitions.codalab.org/competitions/21238) and obtain the evaluation scores 
 
 (2) Download the annotations for evaluation from [FreiHAND Dataset Page](https://lmb.informatik.uni-freiburg.de/resources/datasets/FreihandDataset.en.html) and use [FreiHAND Evaluation Code](https://github.com/lmb-freiburg/freihand) to obtain the evaluation scores 
+
+#### Quantitative Evaluation Results
+
+- obtained by using the released model checkpoint (`FastMETRO-L-H64_freihand_state_dict.bin`)
+
+```
+Evaluation 3D KP results:
+auc=0.000, mean_kp3d_avg=71.50 cm
+Evaluation 3D KP ALIGNED results:
+auc=0.871, mean_kp3d_avg=0.65 cm
+
+Evaluation 3D MESH results:
+auc=0.000, mean_kp3d_avg=71.50 cm
+Evaluation 3D MESH ALIGNED results:
+auc=0.858, mean_kp3d_avg=0.71 cm
+
+F-scores
+F@5.0mm = 0.000         F_aligned@5.0mm = 0.687
+F@15.0mm = 0.000        F_aligned@15.0mm = 0.983
+```
+
+- Note that only the aligned scores are considered because FastMETRO predicts relative coordinates, as in [METRO](https://github.com/microsoft/MeshTransformer) and [Mesh Graphormer](https://github.com/microsoft/MeshGraphormer).
+- There was no test-time augmentation.

@@ -546,6 +546,8 @@ def run_eval(args, val_dataloader, FastMETRO_model, smpl, renderer):
             ' '.join(['Validation', 'Epoch: {ep}',]).format(ep=epoch) 
             + '  MPVPE: {:6.2f}, MPJPE: {:6.2f}, PA-MPJPE: {:6.2f} '.format(1000*val_mPVPE, 1000*val_mPJPE, 1000*val_PAmPJPE)
             )
+    
+    logger.info("The experiment completed successfully. Finalizing run...")
 
     return
 
