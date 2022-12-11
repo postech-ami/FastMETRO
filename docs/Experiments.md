@@ -16,6 +16,7 @@ In our experiments, we conduct single-node distributed training using a machine 
 ## 3D Human Mesh Reconstruction from a Single RGB Image
 
 <a name="h36m"></a>
+
 ### Training on Human3.6M
 
 We conduct large-scale training on multiple 2D and 3D datasets, including Human3.6M, COCO, MUCO, UP3D, MPII. During training, it will evaluate the performance per epoch, and save the best checkpoints.
@@ -35,7 +36,6 @@ python -m torch.distributed.launch --nproc_per_node=4 \
        --output_dir FastMETRO-L-H64_h36m/
 ```
 
-- To use learnable upsampling layers, you need to set `--use_learnable_upsample` as `True`
 - To use SMPL parameter regressor, you need to set `--use_smpl_param_regressor` as `True` and load pre-trained FastMETRO
 - To visualize the 3D mesh output during training, you need to set `--visualize_training` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
@@ -57,6 +57,7 @@ python -m torch.distributed.launch --nproc_per_node=4 \
        --output_dir FastMETRO-L-H64_h36m_eval/
 ```
 
+- To use SMPL parameter regressor, you need to set `--use_smpl_param_regressor` as `True`
 - To visualize the 3D mesh output during evaluation, you need to set `--run_eval_and_visualize` as `True`
 - To visualize the 3D mesh output in multi views, you need to set `--visualize_multi_view` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
@@ -75,8 +76,17 @@ MPJPE:  52.96, PA-MPJPE:  33.58
 
 ![h36m_example](../assets/h36m_example.jpg)
 
+- obtained by using the released model checkpoint (`FastMETRO-L-H64_smpl_h36m_state_dict.bin`)
+
+![h36m_smpl_example](../assets/h36m_smpl_example.jpg)
+
+- (Left) Input Image
+- (Middle) FastMETRO
+- (Right) FastMETRO with SMPL parameter regressor
+
 
 <a name="3dpw"></a>
+
 ### Training on 3DPW
 
 We follow prior works that also use 3DPW training data. In order to make the training faster, we **fine-tune** our pre-trained model (`FastMETRO-L-H64_h36m_state_dict.bin`) on 3DPW training set. 
@@ -99,7 +109,6 @@ python -m torch.distributed.launch --nproc_per_node=4 \
        --output_dir FastMETRO-L-H64_3dpw/
 ```
 
-- To use learnable upsampling layers, you need to set `--use_learnable_upsample` as `True`
 - To use SMPL parameter regressor, you need to set `--use_smpl_param_regressor` as `True` and load pre-trained FastMETRO
 - To visualize the 3D mesh output during training, you need to set `--visualize_training` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
@@ -121,6 +130,7 @@ python -m torch.distributed.launch --nproc_per_node=4 \
        --output_dir FastMETRO-L-H64_3dpw_eval/
 ```
 
+- To use SMPL parameter regressor, you need to set `--use_smpl_param_regressor` as `True`
 - To visualize the 3D mesh output during evaluation, you need to set `--run_eval_and_visualize` as `True`
 - To visualize the 3D mesh output in multi views, you need to set `--visualize_multi_view` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
@@ -139,10 +149,19 @@ MPVPE:  82.95, MPJPE:  73.54, PA-MPJPE:  44.58
 
 ![3dpw_example](../assets/3dpw_example.jpg)
 
+- obtained by using the released model checkpoint (`FastMETRO-L-H64_smpl_3dpw_state_dict.bin`)
+
+![3dpw_smpl_example](../assets/3dpw_smpl_example.jpg)
+
+- (Left) Input Image
+- (Middle) FastMETRO
+- (Right) FastMETRO with SMPL parameter regressor
+
 
 ## 3D Hand Mesh Reconstruction from a Single RGB Image
 
 <a name="freihand"></a>
+
 ### Training on FreiHAND
 
 We use the following script to train on FreiHAND dataset. 

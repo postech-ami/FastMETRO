@@ -104,7 +104,7 @@ class PyRender_Renderer:
         return image
 
 
-def visualize_reconstruction_pyrender(img, img_size, gt_kp, vertices, pred_kp, camera, renderer, color='blue', focal_length=1000):
+def visualize_reconstruction_pyrender(img, vertices, camera, renderer, color='blue', focal_length=1000):
     img = (img * 255).astype(np.uint8)
     save_mesh_path = None
     rend_color = color
@@ -120,7 +120,7 @@ def visualize_reconstruction_pyrender(img, img_size, gt_kp, vertices, pred_kp, c
     
     return combined
 
-def visualize_reconstruction_multi_view_pyrender(img, img_size, gt_kp, vertices, pred_kp, camera, renderer, color='blue', focal_length=1000):
+def visualize_reconstruction_multi_view_pyrender(img, vertices, camera, renderer, color='blue', focal_length=1000):
     img = (img * 255).astype(np.uint8)
     save_mesh_path = None
     rend_color = color
@@ -176,7 +176,7 @@ def visualize_reconstruction_multi_view_pyrender(img, img_size, gt_kp, vertices,
     
     return combined
 
-def visualize_reconstruction_smpl_pyrender(img, img_size, gt_kp, vertices, pred_kp, camera, renderer, smpl_vertices, smpl_pred_kp, color='blue', focal_length=1000):
+def visualize_reconstruction_smpl_pyrender(img, vertices, camera, renderer, smpl_vertices, color='blue', focal_length=1000):
     img = (img * 255).astype(np.uint8)
     save_mesh_path = None
     rend_color = color

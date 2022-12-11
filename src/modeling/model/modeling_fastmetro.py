@@ -91,9 +91,6 @@ class FastMETRO_Body_Network(nn.Module):
         ### pre-computed upsampling matrix is used (from intermediate mesh to fine mesh); to reduce optimization difficulty
         self.coarse2intermediate_upsample = nn.Linear(431, 1723)
 
-        # (optional) learnable upsampling layer (from intermediate mesh to fine mesh); for visually pleasing mesh result
-        if args.use_learnable_upsample:
-            self.intermediate2fine_upsample = nn.Linear(1723, 6890)
         # (optional) smpl parameter regressor; to obtain SMPL parameters
         if args.use_smpl_param_regressor:
             self.smpl_parameter_regressor = build_smpl_parameter_regressor()
@@ -136,10 +133,7 @@ class FastMETRO_Body_Network(nn.Module):
         # coarse-to-intermediate mesh upsampling
         pred_3d_vertices_intermediate = self.coarse2intermediate_upsample(pred_3d_vertices_coarse.transpose(1,2)).transpose(1,2) # batch_size X num_vertices(intermediate) X 3
         # intermediate-to-fine mesh upsampling
-        if self.args.use_learnable_upsample:
-            pred_3d_vertices_fine = self.intermediate2fine_upsample(pred_3d_vertices_intermediate.transpose(1,2)).transpose(1,2) # batch_size X num_vertices(fine) X 3
-        else:
-            pred_3d_vertices_fine = self.mesh_sampler.upsample(pred_3d_vertices_intermediate, n1=1, n2=0) # batch_size X num_vertices(fine) X 3
+        pred_3d_vertices_fine = self.mesh_sampler.upsample(pred_3d_vertices_intermediate, n1=1, n2=0) # batch_size X num_vertices(fine) X 3
 
         out = {}
         out['pred_cam'] = pred_cam

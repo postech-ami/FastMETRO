@@ -259,14 +259,10 @@ def draw_text(input_image, content):
         image = image.astype(np.float32) / 255.
     return image
 
-def visualize_reconstruction_opendr(img, img_size, gt_kp, vertices, pred_kp, camera, renderer, color='light_blue', focal_length=1000):
-    """Overlays gt_kp and pred_kp on img.
-    Draws vert with text.
+def visualize_reconstruction_opendr(img, vertices, camera, renderer, color='light_blue', focal_length=1000):
+    """
     Renderer is an instance of OpenDR Renderer.
     """
-    gt_vis = gt_kp[:, 2].astype(bool)
-    loss = np.sum((gt_kp[gt_vis, :2] - pred_kp[gt_vis])**2)
-    debug_text = {"sc": camera[0], "tx": camera[1], "ty": camera[2], "kpl": loss}
     # Fix a flength so i can render this with persp correct scale
     res = img.shape[1]
     camera_t = np.array([camera[1], camera[2], 2*focal_length/(res * camera[0] +1e-9)])
@@ -274,19 +270,12 @@ def visualize_reconstruction_opendr(img, img_size, gt_kp, vertices, pred_kp, cam
                                img=img, use_bg=True,
                                focal_length=focal_length,
                                body_color=color)
-    rend_img = draw_text(rend_img, debug_text)
 
-    # Draw skeleton
-    gt_joint = ((gt_kp[:, :2] + 1) * 0.5) * img_size
-    pred_joint = ((pred_kp + 1) * 0.5) * img_size
-    img_with_gt = draw_skeleton(img, gt_joint, draw_edges=False, vis=gt_vis)
-    skel_img = draw_skeleton(img_with_gt, pred_joint)
-
-    combined = np.hstack([skel_img, rend_img])
+    combined = np.hstack([img, rend_img])
 
     return combined
 
-def visualize_reconstruction_multi_view_opendr(img, img_size, gt_kp, vertices, pred_kp, camera, renderer, color='light_blue', focal_length=1000):
+def visualize_reconstruction_multi_view_opendr(img, vertices, camera, renderer, color='light_blue', focal_length=1000):
     # Fix a flength so i can render this with persp correct scale
     res = img.shape[1]
     camera_t = np.array([camera[1], camera[2], 2*focal_length/(res * camera[0] +1e-9)])
@@ -334,7 +323,7 @@ def visualize_reconstruction_multi_view_opendr(img, img_size, gt_kp, vertices, p
 
     return combined
 
-def visualize_reconstruction_smpl_opendr(img, img_size, gt_kp, vertices, pred_kp, camera, renderer, smpl_vertices, smpl_pred_kp, color='light_blue', focal_length=1000):
+def visualize_reconstruction_smpl_opendr(img, vertices, camera, renderer, smpl_vertices, color='light_blue', focal_length=1000):
     # Fix a flength so i can render this with persp correct scale
     res = img.shape[1]
     camera_t = np.array([camera[1], camera[2], 2*focal_length/(res * camera[0] +1e-9)])

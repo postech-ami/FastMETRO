@@ -414,8 +414,12 @@ def run_train(args, train_dataloader, val_dataloader, FastMETRO_model, smpl, mes
             loss_smpl_vertices = vertices_loss(criterion_3d_vertices, pred_smpl_3d_vertices, gt_3d_vertices_fine, has_smpl, args.device)
             # compute smpl parameter loss
             loss_smpl = smpl_param_loss(criterion_smpl_param, pred_rotmat, pred_betas, gt_pose, gt_betas, has_smpl, args.device) + loss_smpl_3d_joints + loss_smpl_2d_joints + loss_smpl_vertices
-            # mainly train smpl parameter regressor
-            loss = (args.smpl_param_loss_weight * loss_smpl) + (1e-8 * loss)
+            if "H36m" in args.train_yaml:
+                # mainly train smpl parameter regressor in h36m training
+                loss = (args.smpl_param_loss_weight * loss_smpl) + (1e-8 * loss)
+            else:
+                # train both in 3dpw fine-tuning
+                loss = (args.smpl_param_loss_weight * loss_smpl) + loss
 
         # update logs
         log_loss_3d_joints.update(loss_3d_joints.item(), batch_size)
@@ -447,10 +451,8 @@ def run_train(args, train_dataloader, val_dataloader, FastMETRO_model, smpl, mes
             if args.visualize_training and (iteration >= args.logging_steps):
                 visual_imgs = visualize_mesh(renderer,
                                             annotations['ori_img'].detach(),
-                                            annotations['joints_2d'].detach(),
                                             pred_3d_vertices_fine.detach(), 
-                                            pred_cam.detach(),
-                                            pred_2d_joints_from_smpl.detach())
+                                            pred_cam.detach())
                 visual_imgs = visual_imgs.transpose(0,1)
                 visual_imgs = visual_imgs.transpose(1,2)
                 visual_imgs = np.asarray(visual_imgs)
@@ -638,19 +640,14 @@ def run_validate(args, val_loader, FastMETRO_model, epoch, smpl, renderer):
                     pred_smpl_2d_joints = orthographic_projection(pred_smpl_3d_joints, pred_cam) # batch_size X 14 X 2
                     visual_imgs = visualize_mesh_with_smpl(renderer,
                                                            annotations['ori_img'].detach(),
-                                                           annotations['joints_2d'].detach(),
                                                            pred_3d_vertices_fine.detach(), 
                                                            pred_cam.detach(),
-                                                           pred_2d_joints_from_smpl.detach(),
-                                                           pred_smpl_3d_vertices.detach(),
-                                                           pred_smpl_2d_joints.detach())
+                                                           pred_smpl_3d_vertices.detach())
                 else:
                     visual_imgs = visualize_mesh(renderer,
                                                 annotations['ori_img'].detach(),
-                                                annotations['joints_2d'].detach(),
                                                 pred_3d_vertices_fine.detach(), 
-                                                pred_cam.detach(),
-                                                pred_2d_joints_from_smpl.detach())
+                                                pred_cam.detach())
                 visual_imgs = visual_imgs.transpose(0,1)
                 visual_imgs = visual_imgs.transpose(1,2)
                 visual_imgs = np.asarray(visual_imgs)
@@ -688,58 +685,47 @@ def run_validate(args, val_loader, FastMETRO_model, epoch, smpl, renderer):
         
     return val_result
 
-def visualize_mesh(renderer, images, gt_keypoints_2d, pred_vertices, pred_cam, pred_keypoints_2d):
-    gt_keypoints_2d = gt_keypoints_2d.cpu().numpy()
-    to_lsp = list(range(14))
+def visualize_mesh(renderer, images, pred_vertices, pred_cam):
     rend_imgs = []
     batch_size = pred_vertices.shape[0]
     
     for i in range(batch_size):
         img = images[i].cpu().numpy().transpose(1,2,0)
-        # Get LSP keypoints from the full list of keypoints
-        gt_keypoints_2d_ = gt_keypoints_2d[i, to_lsp]
-        pred_keypoints_2d_ = pred_keypoints_2d.cpu().numpy()[i, to_lsp]
-        # Get predict vertices for the particular example
+        # Get predicted vertices for the particular example
         vertices = pred_vertices[i].cpu().numpy()
         cam = pred_cam[i].cpu().numpy()
-        # Visualize reconstruction and detected pose
+        # Visualize reconstruction
         if args.use_opendr_renderer:
             if args.visualize_multi_view:
-                rend_img = visualize_reconstruction_multi_view_opendr(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_multi_view_opendr(img, vertices, cam, renderer)
             else:
-                rend_img = visualize_reconstruction_opendr(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_opendr(img, vertices, cam, renderer)
         else:
             if args.visualize_multi_view:
-                rend_img = visualize_reconstruction_multi_view_pyrender(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_multi_view_pyrender(img, vertices, cam, renderer)
             else:
-                rend_img = visualize_reconstruction_pyrender(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_pyrender(img, vertices, cam, renderer)
         rend_img = rend_img.transpose(2,0,1)
         rend_imgs.append(torch.from_numpy(rend_img))   
     rend_imgs = make_grid(rend_imgs, nrow=1)
     
     return rend_imgs
 
-def visualize_mesh_with_smpl(renderer, images, gt_keypoints_2d, pred_vertices, pred_cam, pred_keypoints_2d, pred_smpl_vertices, pred_smpl_keypoints_2d):
-    gt_keypoints_2d = gt_keypoints_2d.cpu().numpy()
-    to_lsp = list(range(14))
+def visualize_mesh_with_smpl(renderer, images, pred_vertices, pred_cam, pred_smpl_vertices):
     rend_imgs = []
     batch_size = pred_vertices.shape[0]
     
     for i in range(batch_size):
         img = images[i].cpu().numpy().transpose(1,2,0)
-        # Get LSP keypoints from the full list of keypoints
-        gt_keypoints_2d_ = gt_keypoints_2d[i, to_lsp]
-        pred_keypoints_2d_ = pred_keypoints_2d.cpu().numpy()[i, to_lsp]
-        pred_smpl_keypoints_2d_ = pred_smpl_keypoints_2d.cpu().numpy()[i, to_lsp]
-        # Get predict vertices for the particular example
+        # Get predicted vertices for the particular example
         vertices = pred_vertices[i].cpu().numpy()
         smpl_vertices = pred_smpl_vertices[i].cpu().numpy()
         cam = pred_cam[i].cpu().numpy()
-        # Visualize reconstruction and detected pose
+        # Visualize reconstruction
         if args.use_opendr_renderer:
-            rend_img = visualize_reconstruction_smpl_opendr(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer, smpl_vertices, pred_smpl_keypoints_2d_)
+            rend_img = visualize_reconstruction_smpl_opendr(img, vertices, cam, renderer, smpl_vertices)
         else:
-            rend_img = visualize_reconstruction_smpl_pyrender(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer, smpl_vertices, pred_smpl_keypoints_2d_)
+            rend_img = visualize_reconstruction_smpl_pyrender(img, vertices, cam, renderer, smpl_vertices)
         rend_img = rend_img.transpose(2,0,1)
         rend_imgs.append(torch.from_numpy(rend_img))   
     rend_imgs = make_grid(rend_imgs, nrow=1)
@@ -819,7 +805,6 @@ def parse_args():
     parser.add_argument("--transformer_dropout", default=0.1, type=float)
     parser.add_argument("--transformer_nhead", default=8, type=int)
     parser.add_argument("--pos_type", default='sine', type=str)    
-    parser.add_argument("--use_learnable_upsample", default=False, action='store_true',) 
     parser.add_argument("--use_smpl_param_regressor", default=False, action='store_true',) 
     # CNN backbone
     parser.add_argument('-a', '--arch', default='hrnet-w64',

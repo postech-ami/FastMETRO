@@ -314,10 +314,8 @@ def run_train(args, train_dataloader, FastMETRO_model, mano_model, mesh_sampler,
             if args.visualize_training and (iteration >= args.logging_steps):
                 visual_imgs = visualize_mesh(renderer,
                                             annotations['ori_img'].detach(),
-                                            annotations['joints_2d'].detach(),
                                             pred_3d_vertices_fine.detach(), 
-                                            pred_cam.detach(),
-                                            pred_2d_joints_from_mano.detach())
+                                            pred_cam.detach())
                 visual_imgs = visual_imgs.transpose(0,1)
                 visual_imgs = visual_imgs.transpose(1,2)
                 visual_imgs = np.asarray(visual_imgs)
@@ -402,10 +400,8 @@ def run_inference_hand_mesh(args, val_loader, FastMETRO_model, mano_model, rende
                     # visualization
                     visual_imgs = visualize_mesh(renderer,
                                                 annotations['ori_img'].detach(),
-                                                annotations['joints_2d'].detach(),
                                                 pred_3d_vertices_fine.detach(), 
-                                                pred_cam.detach(),
-                                                pred_2d_joints_from_mano.detach())
+                                                pred_cam.detach())
                     visual_imgs = visual_imgs.transpose(0,1)
                     visual_imgs = visual_imgs.transpose(1,2)
                     visual_imgs = np.asarray(visual_imgs)
@@ -430,30 +426,25 @@ def run_inference_hand_mesh(args, val_loader, FastMETRO_model, mano_model, rende
     
     return 
 
-def visualize_mesh(renderer, images, gt_keypoints_2d, pred_vertices, pred_cam, pred_keypoints_2d):
-    gt_keypoints_2d = gt_keypoints_2d.cpu().numpy()
-    to_lsp = list(range(21))
+def visualize_mesh(renderer, images, pred_vertices, pred_cam):
     rend_imgs = []
     batch_size = pred_vertices.shape[0]
     for i in range(batch_size):
         img = images[i].cpu().numpy().transpose(1,2,0)
-        # Get LSP keypoints from the full list of keypoints
-        gt_keypoints_2d_ = gt_keypoints_2d[i, to_lsp]
-        pred_keypoints_2d_ = pred_keypoints_2d.cpu().numpy()[i, to_lsp]
-        # Get predict vertices for the particular example
+        # Get predicted vertices for the particular example
         vertices = pred_vertices[i].cpu().numpy()
         cam = pred_cam[i].cpu().numpy()
-        # Visualize reconstruction and detected pose
+        # Visualize reconstruction
         if args.use_opendr_renderer:
             if args.visualize_multi_view:
-                rend_img = visualize_reconstruction_multi_view_opendr(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_multi_view_opendr(img, vertices, cam, renderer)
             else:
-                rend_img = visualize_reconstruction_opendr(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_opendr(img, vertices, cam, renderer)
         else:
             if args.visualize_multi_view:
-                rend_img = visualize_reconstruction_multi_view_pyrender(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_multi_view_pyrender(img, vertices, cam, renderer)
             else:
-                rend_img = visualize_reconstruction_pyrender(img, 224, gt_keypoints_2d_, vertices, pred_keypoints_2d_, cam, renderer)
+                rend_img = visualize_reconstruction_pyrender(img, vertices, cam, renderer)
         rend_img = rend_img.transpose(2,0,1)
         rend_imgs.append(torch.from_numpy(rend_img))   
     rend_imgs = make_grid(rend_imgs, nrow=1)
@@ -577,7 +568,7 @@ def main(args):
     set_seed(args.seed, args.num_gpus)
     logger.info("Using {} GPUs".format(args.num_gpus))
 
-    # Mesh and SMPL utils
+    # Mesh and MANO utils
     mano_model = MANO().to(args.device)
     mano_model.layer = mano_model.layer.to(args.device)
     mesh_sampler = Mesh()
