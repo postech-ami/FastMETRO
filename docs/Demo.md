@@ -43,7 +43,7 @@ python ./src/tools/end2end_inference_bodymesh.py \
 
 - (Left) Input Image
 - (Middle) FastMETRO
-- (Right) FastMETRO with SMPL parameter regressor
+- (Right) FastMETRO with an optional SMPL parameter regressor
 
 
 <a name="demo_hand"></a>

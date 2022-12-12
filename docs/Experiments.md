@@ -62,7 +62,7 @@ python -m torch.distributed.launch --nproc_per_node=4 \
 - To visualize the 3D mesh output in multi views, you need to set `--visualize_multi_view` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
 
-#### Quantitative Evaluation Result
+#### Quantitative Evaluation Result ([Evaluation Log](https://drive.google.com/u/2/uc?id=1L-1O6STcwTQPolv8U2e9j6MoIQh4vTof&export=download&confirm=t))
 
 - obtained by using the released model checkpoint (`FastMETRO-L-H64_h36m_state_dict.bin`)
 
@@ -82,7 +82,7 @@ MPJPE:  52.96, PA-MPJPE:  33.58
 
 - (Left) Input Image
 - (Middle) FastMETRO
-- (Right) FastMETRO with SMPL parameter regressor
+- (Right) FastMETRO with an optional SMPL parameter regressor
 
 
 <a name="3dpw"></a>
@@ -135,7 +135,7 @@ python -m torch.distributed.launch --nproc_per_node=4 \
 - To visualize the 3D mesh output in multi views, you need to set `--visualize_multi_view` as `True`
 - To use [OpenDR](https://github.com/mattloper/opendr) Renderer instead of [Pyrender](https://github.com/mmatl/pyrender) Renderer, you need to set `--use_opendr_renderer` as `True`
 
-#### Quantitative Evaluation Result
+#### Quantitative Evaluation Result ([Evaluation Log](https://drive.google.com/u/2/uc?id=1PjyXmfevsxs4FO7K4fmjYzfJCMbKrsJK&export=download&confirm=t))
 
 - obtained by using the released model checkpoint (`FastMETRO-L-H64_3dpw_state_dict.bin`)
 
@@ -155,7 +155,7 @@ MPVPE:  82.95, MPJPE:  73.54, PA-MPJPE:  44.58
 
 - (Left) Input Image
 - (Middle) FastMETRO
-- (Right) FastMETRO with SMPL parameter regressor
+- (Right) FastMETRO with an optional SMPL parameter regressor
 
 
 ## 3D Hand Mesh Reconstruction from a Single RGB Image

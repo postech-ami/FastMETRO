@@ -35,21 +35,21 @@ Please check [Download.md](./docs/Download.md) for more information.
 
 <a name="model_checkpoint"></a>
 
-### Non-Parametric
-| Model                               | Dataset   | Link            |
-| ----------------------------------- | --------- | --------------- |
-| FastMETRO-S-R50                     | Human3.6M | Download (Soon) |
-| FastMETRO-L-H64                     | Human3.6M | [Download](https://drive.google.com/u/2/uc?id=1WU6q27SV7YNGCSBLypB5IGFVWMnL26io&export=download&confirm=t)        |
-| FastMETRO-S-R50                     | 3DPW      | Download (Soon) |
-| FastMETRO-L-H64                     | 3DPW      | [Download](https://drive.google.com/u/2/uc?id=19Nc-KyluAB4UmY70HoBvIRqwRFVy4jQB&export=download&confirm=t)        |
-| FastMETRO-L-H64                     | FreiHAND  | [Download](https://drive.google.com/u/2/uc?id=1u6dr0E1w15IBmstcFaihr6r-DHKFWuw1&export=download&confirm=t)        |
+### (Non-Parametric) FastMETRO
+| Model                               | Dataset   | PA-MPJPE | Link            |
+| ----------------------------------- | --------- | -------- | --------------- |
+| FastMETRO-S-R50                     | Human3.6M | 38.8     | [Download](https://drive.google.com/u/2/uc?id=1v61B2ewify6zAedQHo8vXOhdzckKl3hT&export=download&confirm=t)        |
+| FastMETRO-S-R50                     | 3DPW      | 49.1     | [Download](https://drive.google.com/u/2/uc?id=1tk5evwX8GHV1uckVQcmMB_Lhu_RZkf0I&export=download&confirm=t)        |
+| FastMETRO-L-H64                     | Human3.6M | 33.6     | [Download](https://drive.google.com/u/2/uc?id=1WU6q27SV7YNGCSBLypB5IGFVWMnL26io&export=download&confirm=t)        |
+| FastMETRO-L-H64                     | 3DPW      | 44.6     | [Download](https://drive.google.com/u/2/uc?id=19Nc-KyluAB4UmY70HoBvIRqwRFVy4jQB&export=download&confirm=t)        |
+| FastMETRO-L-H64                     | FreiHAND  | 6.5      | [Download](https://drive.google.com/u/2/uc?id=1u6dr0E1w15IBmstcFaihr6r-DHKFWuw1&export=download&confirm=t)        |
 
 
-### Parametric (w/ optional SMPL parameter regressor)
-| Model           | Dataset   | Link            |
-| --------------- | --------- | --------------- |
-| FastMETRO-L-H64 | Human3.6M | Download (Soon) |
-| FastMETRO-L-H64 | 3DPW      | Download (Soon) |
+### (Parametric) FastMETRO with an optional SMPL parameter regressor
+| Model           | Dataset   | PA-MPJPE | Link            |
+| --------------- | --------- | -------- | --------------- |
+| FastMETRO-L-H64 | Human3.6M | 36.1     | [Download](https://drive.google.com/u/2/uc?id=1cx2siY3Ecjo8j036j9QCthf9agvYSDRK&export=download&confirm=t)        |
+| FastMETRO-L-H64 | 3DPW      | 51.0     | [Download](https://drive.google.com/u/2/uc?id=16iSWbk9SQrlUDpWwD6pLknv2_4S5_XBS&export=download&confirm=t)        |
 
 - Model checkpoints were obtained in [Conda Environment (CUDA 11.1)](./docs/Installation.md)
 - To use SMPL parameter regressor, you need to set `--use_smpl_param_regressor` as `True`
