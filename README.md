@@ -105,6 +105,8 @@ We use submodules from third party ([hassony2/manopth](https://github.com/hasson
 ---
 
 ## Contact
+Junhyeong Cho (jhcho99.cs@gmail.com)
+
 fastmetro.official@gmail.com
 
 ---
