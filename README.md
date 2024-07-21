@@ -14,6 +14,14 @@
 
 ---
 
+## Notice
+
+- For FastMETRO (non-parametric and parametric) results on the EMDB dataset, please see Table 3 of [EMDB: The Electromagnetic Database of Global 3D Human Pose and Shape in the Wild](https://arxiv.org/abs/2308.16894).
+
+- We recently investigated the large performance gap before and after fine-tuning our model on the 3DPW dataset. Without the fine-tuning on 3DPW, we observed an unusual model bias for outdoor images of a person’s back. We suspect that the bias might be attributed to training our model with 2D annotation datasets (e.g., COCO), where the model was supervised only using the 2D joint reprojection loss. Most non-parametric methods might suffer from the same issue if they do not fully exploit 3D human body priors. For more details, please see [Issue #13](https://github.com/postech-ami/FastMETRO/issues/13). We hope our observations will facilitate future research!
+
+---
+
 ## Overview
 Transformer encoder architectures have recently achieved state-of-the-art results on monocular 3D human mesh reconstruction, but they require a substantial number of parameters and expensive computations. Due to the large memory overhead and slow inference speed, it is difficult to deploy such models for practical use. In this paper, we propose a novel transformer encoder-decoder architecture for 3D human mesh reconstruction from a single image, called *FastMETRO*. We identify the performance bottleneck in the encoder-based transformers is caused by the token design which introduces high complexity interactions among input tokens. We disentangle the interactions via an encoder-decoder architecture, which allows our model to demand much fewer parameters and shorter inference time. In addition, we impose the prior knowledge of human body's morphological relationship via attention masking and mesh upsampling operations, which leads to faster convergence with higher accuracy. Our FastMETRO improves the Pareto-front of accuracy and efficiency, and clearly outperforms image-based methods on Human3.6M and 3DPW. Furthermore, we validate its generalizability on FreiHAND.
 
